@@ -1,0 +1,7 @@
+<launch>
+    <!-- Menjalankan rosbridge_websocket.launch -->
+    <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" />
+
+    <!-- Menjalankan publisher.py -->
+    <node pkg="robot_pkg" type="publisher.py" name="publisher_node" output="screen" />
+</launch>
