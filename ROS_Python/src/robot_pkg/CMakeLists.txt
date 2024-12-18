@@ -51,6 +51,7 @@ add_message_files(
   FILES
   data_robot.msg
   server2pc.msg
+  bs2pc_roslib.msg
 )
 
 ## Generate services in the 'srv' folder
