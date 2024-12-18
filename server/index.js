@@ -4,6 +4,7 @@ import MsgServer2Pc from "./msg/server/server2pc.json" assert { type: "json" };
 
 const PC2BS = [];
 const rosConnections = [];
+let MSGSERVER2PC = { ...MsgServer2Pc };
 
 // initiation and declaration
 for (let key in Config) {
@@ -30,15 +31,15 @@ rosConnections.forEach((rosConnection, i) => {
 });
 
 // connection to BS
-const urlHamas = "ws://192.168.0.187:9090";
+const urlHamas = "ws://localhost:9090";
 const hamasConnection = new RosConnection(urlHamas);
 hamasConnection.init();
 
-// hamasConnection.addListener("/bs2pc_server", "iris_msgs/bs2pc_roslib");
-// hamasConnection.subscribeToListener("/bs2pc_server", (message) => {
-//   console.log("hamas : ", message);
-//   MsgServer2Pc = { ...message };
-// });
+hamasConnection.addListener("/bs2pc_server", "robot_pkg/bs2pc_roslib");
+hamasConnection.subscribeToListener("/bs2pc_server", (message) => {
+  console.log("hamas : ", message);
+  MSGSERVER2PC = { ...message };
+});
 
 // // publisher PC to BS From Server
 // rosConnections.forEach((rosConnection, i) => {
