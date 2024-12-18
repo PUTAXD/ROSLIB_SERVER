@@ -4,6 +4,7 @@ class RosConnection {
   constructor(url = "ws://localhost:9090") {
     this.ros = new ROSLIB.Ros({
       url: url,
+      encoding: "ascii",
     });
     this.listeners = {};
     this.publishers = {}; // Dictionary untuk menyimpan listener berdasarkan topik

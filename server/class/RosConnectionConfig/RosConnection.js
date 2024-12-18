@@ -3,25 +3,40 @@ import ListenerBuilder from "./ListenerBuilder.js";
 import PublisherBuilder from "./PublisherBuilder.js";
 class RosConnection {
   constructor(url = "ws://localhost:9090") {
-    this.ros = new ROSLIB.Ros({
-      url: url,
-    });
+    this.url = url;
+    this.ros = null;
+    this.isConnect = false;
     this.listeners = {};
     this.publishers = {};
   }
 
   init() {
+    this.ros = new ROSLIB.Ros({
+      url: this.url,
+    });
+
     this.ros.on("connection", () => {
+      this.isConnect = true;
       console.log("Connected to WebSocket server");
     });
 
     this.ros.on("error", (error) => {
+      this.isConnect = false;
       console.log("Error connecting to WebSocket server:", error);
+      // this.retryConnection();
     });
 
     this.ros.on("close", () => {
+      this.isConnect = false;
       console.log("Connection to WebSocket server closed");
     });
+  }
+
+  retryConnection() {
+    console.log("Retrying connection in 2 seconds...");
+    setTimeout(() => {
+      this.init(); // Coba lagi untuk menyambung ke WebSocket server
+    }, 2000); // Tunggu selama 5 detik sebelum mencoba lagi
   }
 
   addPublisher(topicName, messageType, queueSize = 10) {
@@ -57,12 +72,17 @@ class RosConnection {
     const publisher = this.publishers[topicName];
     const message = new ROSLIB.Message(messageData);
 
-    setInterval(() => {
+    let intervalId;
+    intervalId = setInterval(() => {
       publisher.publish(message);
       console.log(`Published message to ${this.topicName}:`, message);
+      if (this.isConnect == false) {
+        clearInterval(intervalId);
+      }
     }, period);
 
-    console.log(`Published message to ${topicName}:`, message);
+    console.log(`Published message to ${this.topicName}:`);
+    console.log(message);
   }
 
   subscribeToListener(topicName, onMessageCallback) {
