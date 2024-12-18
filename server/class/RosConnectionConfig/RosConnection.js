@@ -63,26 +63,23 @@ class RosConnection {
     console.log(`Subscribed to topic: ${topicName}`);
   }
 
-  publishToPublisher(topicName, messageData, period = 100) {
-    if (!this.publishers[topicName]) {
+  publishWithTimer(topicName, messageData, period = 100) {
+    let publishIntervalId;
+    publishIntervalId = setInterval(() => {
+      this.publishOnce(topicName, messageData);
+    }, period);
+  }
+
+  publishOnce(topicName, messageData) {
+    if (this.publishers[topicName] == null) {
       console.error(`Publisher for topic ${topicName} does not exist.`);
       return;
     }
 
     const publisher = this.publishers[topicName];
     const message = new ROSLIB.Message(messageData);
-
-    let intervalId;
-    intervalId = setInterval(() => {
-      publisher.publish(message);
-      console.log(`Published message to ${this.topicName}:`, message);
-      if (this.isConnect == false) {
-        clearInterval(intervalId);
-      }
-    }, period);
-
-    console.log(`Published message to ${this.topicName}:`);
-    console.log(message);
+    publisher.publish(message);
+    console.log(`Published message to ${topicName}:`, message);
   }
 
   subscribeToListener(topicName, onMessageCallback) {

@@ -3,9 +3,11 @@
 import rospy
 from robot_pkg.msg import data_robot
 from robot_pkg.msg import bs2pc_roslib
+from robot_pkg.msg import pc2bs_roslib
 
 def talker():
     robotPublisher = rospy.Publisher('/bs2pc_server', bs2pc_roslib, queue_size=10)
+    bsPublisher = rospy.Publisher('/pc2bs_server', pc2bs_roslib, queue_size=10)
     rospy.init_node('talker', anonymous=True)
     rate = rospy.Rate(10) # 10hz
     while not rospy.is_shutdown():
