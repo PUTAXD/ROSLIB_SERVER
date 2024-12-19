@@ -1,0 +1,7 @@
+<launch>
+  <!-- Jalankan rosbridge -->
+  <node pkg="rosbridge_server" type="rosbridge_websocket" name="rosbridge_websocket" output="screen"/>
+
+  <!-- Tambahkan publisher untuk topic baru -->
+  <node pkg="rostopic" type="rostopic" name="bs2pc_publisher" args="pub /haha robot_pkg/data_robot '{}' -r 1"/>
+</launch>
