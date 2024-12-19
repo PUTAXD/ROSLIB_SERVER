@@ -48,22 +48,22 @@ rosConnections.forEach((rosConnection, i) => {
   //publish
   setInterval(() => {
     const msg = new ROSLIB.Message(PC2BS[i]);
-    console.log("msg : ", msg, "i : ", i);
+    // console.log("msg : ", msg, "i : ", i);
     hamasConnection.publishers["/pc2bs_server_" + i].publish(msg);
-  }, 1000);
+  }, 10);
 });
 
 // publisher to robot
-// rosConnections.forEach((rosConnection, i) => {
-//   rosConnections[i].addPublisher("/bs2pc_roslib", "iris_msgs/bs2pc_roslib");
-//   //publish
+rosConnections.forEach((rosConnection, i) => {
+  rosConnections[i].addPublisher("/bs2pc_roslib", "iris_msgs/bs2pc_roslib");
+  //publish
 
-//   setInterval(() => {
-//     const msg = new ROSLIB.Message(MSGSERVER2PC);
-//     console.log("msg : ", msg);
-//     rosConnections[i].publishers["/bs2pc_roslib"].publish(msg);
-//   }, 1000);
-// });
+  setInterval(() => {
+    const msg = new ROSLIB.Message(MSGSERVER2PC);
+    console.log("msg : ", msg);
+    rosConnections[i].publishers["/bs2pc_roslib"].publish(msg);
+  }, 10);
+});
 
 // auto reconnect
 setInterval(() => {
